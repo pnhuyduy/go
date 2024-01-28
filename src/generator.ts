@@ -54,7 +54,7 @@ const defaultOptions: IOptions = {
   },
 }
 
-export const getNewFingerprint = (payload: IProfile, opts: IOptions = defaultOptions) => {
+export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = defaultOptions) => {
   const options = defu(opts, defaultOptions)
   const newGologinConfig = clone(gologinConfig)
 

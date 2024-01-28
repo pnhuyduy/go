@@ -77,7 +77,7 @@ declare const PROXY_SERVICES: IProxyService[];
 declare const extractProxyInfo: (proxy: IProxy, serviceChecker: IProxyService, timeout?: number) => Promise<Nullable<ICheckProxyResult>>;
 declare const checkProxy: (proxy: IProxy, timeout?: number) => Promise<ICheckProxyResult | null>;
 
-declare const getNewFingerprint: (payload: IProfile, opts?: IOptions) => {
+declare const getNewFingerprint: (payload: IProfile, opts?: Partial<IOptions>) => {
     gologin: {
         profile_id: string;
         name: string;
