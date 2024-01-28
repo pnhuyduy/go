@@ -1,60 +1,56 @@
-type Nullable<T> = T | null
-
-type TMode = "noise" | "off"
-
+type Nullable<T> = T | null;
+type TMode = "noise" | "off";
 interface IOptions {
-  version: string
-  doNotTrack: boolean
-  dns: string
-  webrtc: {
-    mode: "alerted" | "disabled" | "real"
-    fillBasedOnIP: boolean
-  }
-  timezone: {
-    fillBasedOnIP: boolean
-    id: string
-  }
-  location: {
-    mode: "prompt" | "allow" | "block"
-  }
-  language: {
-    autoLang: boolean
-    value: string
-  }
-  canvas: {
-    mode: TMode
-  }
-  clientRects: {
-    mode: TMode
-  }
-  audioContext: {
-    mode: TMode
-  }
-  mediaDevices: {
-    mode: TMode
-  }
-  webGL: {
-    mode: TMode
-  }
-  webGLMetadata: {
-    mode: "mask" | "off"
-    vendor: string
-    renderer: string
-  }
-  fonts: {
-    mode: TMode
-  }
+    version: string;
+    doNotTrack: boolean;
+    dns: string;
+    webrtc: {
+        mode: "alerted" | "disabled" | "real";
+        fillBasedOnIP: boolean;
+    };
+    timezone: {
+        fillBasedOnIP: boolean;
+        id: string;
+    };
+    location: {
+        mode: "prompt" | "allow" | "block";
+    };
+    language: {
+        autoLang: boolean;
+        value: string;
+    };
+    canvas: {
+        mode: TMode;
+    };
+    clientRects: {
+        mode: TMode;
+    };
+    audioContext: {
+        mode: TMode;
+    };
+    mediaDevices: {
+        mode: TMode;
+    };
+    webGL: {
+        mode: TMode;
+    };
+    webGLMetadata: {
+        mode: "mask" | "off";
+        vendor: string;
+        renderer: string;
+    };
+    fonts: {
+        mode: TMode;
+    };
 }
-
 interface IProfile {
-  name?: string
-  proxy: IProxy
-  proxyInfo?: ICheckProxyResult
+    name?: string;
+    proxy: IProxy;
+    proxyInfo?: ICheckProxyResult;
 }
-
 interface ISpawnArgs {
-  executablePath: string
-  userDataDir: string
+    executablePath: string;
+    userDataDir: string;
 }
 
 interface IProxyService {
@@ -438,4 +434,4 @@ declare const randomWebGL: () => {
     vendor: string;
 };
 
-export { type ICheckProxyResult, type IProxy, type IProxyService, PROXY_SERVICES, checkProxy, extractProxyInfo, getNewFingerprint, randomFloat, randomInt, randomItem, randomUID, randomWebGL, spawnArgs, writePrefs };
+export { type ICheckProxyResult, type IOptions, type IProfile, type IProxy, type IProxyService, type ISpawnArgs, type Nullable, PROXY_SERVICES, checkProxy, extractProxyInfo, getNewFingerprint, randomFloat, randomInt, randomItem, randomUID, randomWebGL, spawnArgs, writePrefs };
