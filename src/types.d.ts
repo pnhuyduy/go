@@ -51,7 +51,7 @@ export interface IOptions {
 export interface IProfile {
   name?: string
   proxy: IProxy
-  proxyInfo: ICheckProxyResult
+  proxyInfo?: ICheckProxyResult
 }
 
 export interface ISpawnArgs {

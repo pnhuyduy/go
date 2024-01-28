@@ -1,4 +1,7 @@
 import rfdc from "rfdc"
+import defu from "defu"
+import path from "path"
+import fs from "fs-extra"
 import { randomFloat, randomItem, randomUID, randomWebGL } from "./utils"
 import { randomInt } from "crypto"
 import { defaultPreferences, gologinConfig } from "./template"
@@ -7,7 +10,52 @@ import { deviceMemory, hwConcurrency, screens, userAgents } from "./resources"
 
 const clone = rfdc()
 
-export const getNewFingerprint = (payload: IProfile, options: IOptions) => {
+const defaultOptions: IOptions = {
+  version: "120",
+  doNotTrack: true,
+  dns: "",
+  webrtc: {
+    mode: "alerted",
+    fillBasedOnIP: true,
+  },
+  timezone: {
+    fillBasedOnIP: true,
+    id: "",
+  },
+  location: {
+    mode: "prompt",
+  },
+  language: {
+    autoLang: true,
+    value: "",
+  },
+  canvas: {
+    mode: "noise"
+  },
+  clientRects: {
+    mode: "noise"
+  },
+  audioContext: {
+    mode: "noise"
+  },
+  mediaDevices: {
+    mode: "noise"
+  },
+  webGL: {
+    mode: "noise"
+  },
+  webGLMetadata: {
+    mode: "mask",
+    vendor: "",
+    renderer: "",
+  },
+  fonts: {
+    mode: "noise"
+  },
+}
+
+export const getNewFingerprint = (payload: IProfile, opts: IOptions = defaultOptions) => {
+  const options = defu(opts, defaultOptions)
   const newGologinConfig = clone(gologinConfig)
 
   // name
@@ -19,9 +67,11 @@ export const getNewFingerprint = (payload: IProfile, options: IOptions) => {
     newGologinConfig.proxy.username = username
     newGologinConfig.proxy.password = password
     // Timezone
-    newGologinConfig.timezone.id = payload.proxyInfo.timezone
-    newGologinConfig.geoLocation.latitude = parseFloat(payload.proxyInfo.latitude)
-    newGologinConfig.geoLocation.longitude = parseFloat(payload.proxyInfo.longitude)
+    if (payload.proxyInfo) {
+      newGologinConfig.timezone.id = payload.proxyInfo.timezone
+      newGologinConfig.geoLocation.latitude = parseFloat(payload.proxyInfo.latitude)
+      newGologinConfig.geoLocation.longitude = parseFloat(payload.proxyInfo.longitude)
+    }
   }
 
   // audio
@@ -110,7 +160,6 @@ export const getNewFingerprint = (payload: IProfile, options: IOptions) => {
   return prefs
 }
 
-
 export const spawnArgs = (
   options: Pick<ISpawnArgs, "userDataDir">,
   payload: IProfile,
@@ -138,4 +187,10 @@ export const spawnArgs = (
   ]
 
   return params
+}
+
+export const writePrefs = async (userDataDir: string, prefs: any) => {
+  const prefsPath = path.join(userDataDir, "Default", "Preferences")
+  await fs.ensureFile(prefsPath)
+  await fs.writeJSON(prefsPath, prefs)
 }
