@@ -1,5 +1,5 @@
 {
-  "name": "tsup-starter",
+  "name": "gologout",
   "devDependencies": {
     "@egoist/prettier-config": "^1.0.0",
     "@types/fs-extra": "^11.0.4",
