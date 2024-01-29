@@ -8,6 +8,7 @@ export interface IOptions {
   version: string
   doNotTrack: boolean
   dns: string
+  screen: Nullable<string>
   webrtc: {
     mode: "alerted" | "disabled" | "real"
     fillBasedOnIP: boolean

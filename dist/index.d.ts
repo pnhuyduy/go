@@ -4,6 +4,7 @@ interface IOptions {
     version: string;
     doNotTrack: boolean;
     dns: string;
+    screen: Nullable<string>;
     webrtc: {
         mode: "alerted" | "disabled" | "real";
         fillBasedOnIP: boolean;
@@ -434,4 +435,11 @@ declare const randomWebGL: () => {
     vendor: string;
 };
 
-export { type ICheckProxyResult, type IOptions, type IProfile, type IProxy, type IProxyService, type ISpawnArgs, type Nullable, PROXY_SERVICES, checkProxy, extractProxyInfo, getNewFingerprint, randomFloat, randomInt, randomItem, randomUID, randomWebGL, spawnArgs, writePrefs };
+declare const screens: string[];
+declare const hwConcurrency: number[];
+declare const deviceMemory: number[];
+declare const userAgents: {
+    [k in string]: string;
+};
+
+export { type ICheckProxyResult, type IOptions, type IProfile, type IProxy, type IProxyService, type ISpawnArgs, type Nullable, PROXY_SERVICES, checkProxy, deviceMemory, extractProxyInfo, getNewFingerprint, hwConcurrency, randomFloat, randomInt, randomItem, randomUID, randomWebGL, screens, spawnArgs, userAgents, writePrefs };

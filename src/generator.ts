@@ -14,6 +14,7 @@ const defaultOptions: IOptions = {
   version: "120",
   doNotTrack: true,
   dns: "",
+  screen: null,
   webrtc: {
     mode: "alerted",
     fillBasedOnIP: true,
@@ -131,7 +132,7 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   newGologinConfig.dns = options.dns
 
   // screen
-  const [width, height] = randomItem(screens).split("x")
+  const [width, height] = options.screen ? options.screen.split('x') : randomItem(screens).split("x")
   newGologinConfig.screenWidth = parseInt(width, 10)
   newGologinConfig.screenHeight = parseInt(height, 10)
 

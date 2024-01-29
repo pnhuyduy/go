@@ -1,4 +1,5 @@
 export * from './proxy'
 export * from './generator'
 export * from './utils'
+export * from './resources'
 export * from './types'
