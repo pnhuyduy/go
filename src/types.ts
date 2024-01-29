@@ -51,10 +51,10 @@ export interface IOptions {
 export interface IProfile {
   name?: string
   proxy: IProxy
-  proxyInfo?: ICheckProxyResult
+  proxyInfo?: Nullable<ICheckProxyResult>
 }
 
 export interface ISpawnArgs {
-  executablePath: string
   userDataDir: string
+  remoteDebuggingPort?: number
 }

@@ -46,11 +46,11 @@ interface IOptions {
 interface IProfile {
     name?: string;
     proxy: IProxy;
-    proxyInfo?: ICheckProxyResult;
+    proxyInfo?: Nullable<ICheckProxyResult>;
 }
 interface ISpawnArgs {
-    executablePath: string;
     userDataDir: string;
+    remoteDebuggingPort?: number;
 }
 
 interface IProxyService {
@@ -421,7 +421,7 @@ declare const getNewFingerprint: (payload: IProfile, opts?: Partial<IOptions>) =
     };
     credentials_enable_service: boolean;
 };
-declare const spawnArgs: (options: Pick<ISpawnArgs, "userDataDir">, payload: IProfile, args?: string[]) => string[];
+declare const spawnArgs: (options: ISpawnArgs, payload: IProfile, args?: string[]) => string[];
 declare const writePrefs: (userDataDir: string, prefs: any) => Promise<void>;
 
 declare const randomInt: (min: number, max: number) => number;

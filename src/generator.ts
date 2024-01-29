@@ -161,17 +161,17 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
 }
 
 export const spawnArgs = (
-  options: Pick<ISpawnArgs, "userDataDir">,
+  options: ISpawnArgs,
   payload: IProfile,
   args: string[] = []
 ) => {
-  let params = []
-  const { userDataDir } = options
+  let params: string[] = []
+  const { userDataDir, remoteDebuggingPort } = options
   const { proxy, proxyInfo } = payload
 
   if (proxy.protocol) {
     let proxyStr = `${proxy.protocol}://${proxy.host}:${proxy.port}`
-    const hr_rules = `"MAP * 0.0.0.0 , EXCLUDE ${proxy.host}"`
+    const hr_rules = `MAP * 0.0.0.0 , EXCLUDE ${proxy.host}`
     params.push(`--tz=${proxyInfo?.timezone}`)
     params.push(`--proxy-server=${proxyStr}`)
     params.push(`--host-resolver-rules=${hr_rules}`)
@@ -179,6 +179,7 @@ export const spawnArgs = (
 
   params = [
     `--user-data-dir=${userDataDir}`,
+    ...(remoteDebuggingPort ? [`--remote-debugging-port=${remoteDebuggingPort}`] : []),
     "--lang=en",
     "--font-masking-mode=2",
     "--password-store=basic",
