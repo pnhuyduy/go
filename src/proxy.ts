@@ -28,63 +28,6 @@ export interface ICheckProxyResult {
 
 export const PROXY_SERVICES: IProxyService[] = [
   {
-    name: 'ipgeolocation',
-    url: 'https://api.ipgeolocation.io/ipgeo',
-    extract: (data: any): ICheckProxyResult => {
-      return {
-        ip: data.ip,
-        country: data.country_name,
-        timezone: data.time_zone.name,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        accuracy: null,
-      }
-    },
-  },
-  {
-    name: 'ipscore',
-    url: 'https://ipscore.io/api/v1/score',
-    extract: (data: any): ICheckProxyResult => {
-      return {
-        ip: data.ip_address,
-        country: data.country,
-        timezone: data.timezone,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        accuracy: null,
-      }
-    },
-  },
-  {
-    name: 'ipsb',
-    url: 'https://api.ip.sb/geoip',
-    extract: (data: any): ICheckProxyResult => {
-      return {
-        ip: data.ip,
-        country: data.country_code,
-        timezone: data.timezone,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        accuracy: null,
-      }
-    },
-  },
-  {
-    name: 'ipinfo',
-    url: 'https://ipinfo.io/json',
-    extract: (data: any): ICheckProxyResult => {
-      const loc = data.loc.split(',')
-      return {
-        ip: data.ip,
-        country: data.country,
-        timezone: data.timezone,
-        latitude: loc[0],
-        longitude: loc[1],
-        accuracy: null,
-      }
-    },
-  },
-  {
     name: 'TZ',
     url: 'https://time.gologin.com/timezone',
     extract: (data: any): ICheckProxyResult => {
@@ -95,20 +38,6 @@ export const PROXY_SERVICES: IProxyService[] = [
         latitude: data.ll[0],
         longitude: data.ll[1],
         accuracy: data.accuracy || null,
-      }
-    },
-  },
-  {
-    name: 'lumtest',
-    url: 'https://lumtest.com/myip.json',
-    extract: (data: any): ICheckProxyResult => {
-      return {
-        ip: data.ip,
-        country: data.country,
-        timezone: data.geo.tz,
-        latitude: data.geo.latitude,
-        longitude: data.geo.longitude,
-        accuracy: null,
       }
     },
   },

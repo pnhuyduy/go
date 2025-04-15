@@ -11,7 +11,7 @@ import { deviceMemory, hwConcurrency, screens, userAgents } from "./resources"
 const clone = rfdc()
 
 const defaultOptions: IOptions = {
-  version: "120",
+  version: "134",
   doNotTrack: true,
   dns: "",
   screen: null,
