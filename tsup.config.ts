@@ -5,7 +5,7 @@ export default defineConfig((options) => {
   return {
     entry: ['src/index.ts'],
     splitting: false,
-    sourcemap: !IS_PROD,
+    sourcemap: false,
     clean: true,
     format: ['cjs', 'esm'],
     dts: IS_PROD,
