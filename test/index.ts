@@ -5,17 +5,19 @@ import fs from 'fs-extra';
 import path from 'path';
 
 const profileStorage = path.join(path.resolve(), 'profiles')
-const executablePath = "C:/Users/Admin/.gologin/browser/orbita-browser-120/chrome.exe"
+const executablePath = "C:/Users/Admin/.gologin/browser/orbita-browser-134/chrome.exe"
 
+const proxyStr = '27.73.89.182:10022:khljtiNj3Kd:fdkm3nbjg45d'
+const [host, port, username, password] = proxyStr.split(':');
 
 const startProfile = async () => {
   const profile: IProfile = {
     proxy: {
-      protocol: null,
-      host: '188.74.183.10',
-      port: 8279,
-      username: 'ezddzmnl',
-      password: 'f9q2eomjn5ek',
+      protocol: 'http',
+      host,
+      port: parseInt(port),
+      username,
+      password
     }
   }
 
@@ -24,7 +26,7 @@ const startProfile = async () => {
 
   const fingerprint = getNewFingerprint(profile);
 
-  const userDataDir = path.join(profileStorage, fingerprint.gologin.name)
+  const userDataDir = path.join(profileStorage, 'test')
 
   await fs.ensureDir(path.join(userDataDir))
 
