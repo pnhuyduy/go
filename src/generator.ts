@@ -6,7 +6,7 @@ import { randomFloat, randomItem, randomUID, randomWebGL } from "./utils"
 import { randomInt } from "crypto"
 import { defaultPreferences, gologinConfig } from "./template"
 import type { IOptions, IProfile, ISpawnArgs } from "./types"
-import { deviceMemory, generateUserAgent, hwConcurrency, screens, userAgents } from "./resources"
+import { deviceMemory, generateUserAgent, hwConcurrency, screens } from "./resources"
 
 const clone = rfdc()
 
