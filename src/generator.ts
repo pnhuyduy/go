@@ -25,6 +25,10 @@ const defaultOptions: IOptions = {
   },
   location: {
     mode: "prompt",
+    fillBasedOnIP: true,
+    latitude: 0,
+    longitude: 0,
+    accuracy: 100
   },
   language: {
     autoLang: true,
