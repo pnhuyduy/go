@@ -5,7 +5,7 @@ export type Nullable<T> = T | null
 type TMode = "noise" | "off"
 
 export interface IOptions {
-  version: string
+  version: number
   doNotTrack: boolean
   dns: string
   screen: Nullable<string>

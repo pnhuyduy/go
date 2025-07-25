@@ -6,12 +6,12 @@ import { randomFloat, randomItem, randomUID, randomWebGL } from "./utils"
 import { randomInt } from "crypto"
 import { defaultPreferences, gologinConfig } from "./template"
 import type { IOptions, IProfile, ISpawnArgs } from "./types"
-import { deviceMemory, hwConcurrency, screens, userAgents } from "./resources"
+import { deviceMemory, generateUserAgent, hwConcurrency, screens, userAgents } from "./resources"
 
 const clone = rfdc()
 
 const defaultOptions: IOptions = {
-  version: "134",
+  version: 134,
   doNotTrack: true,
   dns: "",
   screen: null,
@@ -149,7 +149,7 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   newGologinConfig.mediaDevices.videoInputs = randomInt(0, 3)
 
 
-  newGologinConfig.userAgent = userAgents[options.version]
+  newGologinConfig.userAgent = generateUserAgent(options.version)
   newGologinConfig.navigator.platform = "Win32"
 
 
