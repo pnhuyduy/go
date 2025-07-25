@@ -18,7 +18,11 @@ export interface IOptions {
     id: string
   }
   location: {
+    fillBasedOnIP: boolean
     mode: "prompt" | "allow" | "block"
+    latitude: number
+    longitude: number
+    accuracy: number
   }
   language: {
     autoLang: boolean
