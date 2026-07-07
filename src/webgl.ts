@@ -1,4 +1,17 @@
-export default [
+import type { TPlatform } from "./types"
+
+export interface IWebGLRenderer {
+  label: string
+  value: string
+}
+
+export interface IWebGLVendor {
+  label: string
+  value: string
+  renderer: IWebGLRenderer[]
+}
+
+const winVendors: IWebGLVendor[] = [
   {
     label: "Google Inc. (NVIDIA)",
     value: "Google Inc. (NVIDIA)",
@@ -499,3 +512,107 @@ export default [
     ],
   },
 ]
+
+const macVendors: IWebGLVendor[] = [
+  {
+    label: "Google Inc. (Apple)",
+    value: "Google Inc. (Apple)",
+    renderer: [
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Max, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Max, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M2 Pro, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M2 Pro, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Apple M3, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Apple M3, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Intel(R) Iris(R) Plus Graphics 645, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Intel(R) Iris(R) Plus Graphics 645, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: Intel(R) UHD Graphics 630, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: Intel(R) UHD Graphics 630, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: AMD Radeon Pro 5500M, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: AMD Radeon Pro 5500M, Unspecified Version)",
+      },
+      {
+        label: "ANGLE (Apple, ANGLE Metal Renderer: AMD Radeon Pro 560X, Unspecified Version)",
+        value: "ANGLE (Apple, ANGLE Metal Renderer: AMD Radeon Pro 560X, Unspecified Version)",
+      },
+    ],
+  },
+]
+
+const linuxVendors: IWebGLVendor[] = [
+  {
+    label: "Google Inc. (Intel)",
+    value: "Google Inc. (Intel)",
+    renderer: [
+      {
+        label: "ANGLE (Intel, Mesa Intel(R) UHD Graphics 620 (KBL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+        value: "ANGLE (Intel, Mesa Intel(R) UHD Graphics 620 (KBL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+      },
+      {
+        label: "ANGLE (Intel, Mesa Intel(R) HD Graphics 620 (KBL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 22.0.1)",
+        value: "ANGLE (Intel, Mesa Intel(R) HD Graphics 620 (KBL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 22.0.1)",
+      },
+      {
+        label: "ANGLE (Intel, Mesa Intel(R) Xe Graphics (TGL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 22.2.5)",
+        value: "ANGLE (Intel, Mesa Intel(R) Xe Graphics (TGL GT2), OpenGL 4.6 (Compatibility Profile) Mesa 22.2.5)",
+      },
+    ],
+  },
+  {
+    label: "Google Inc. (NVIDIA Corporation)",
+    value: "Google Inc. (NVIDIA Corporation)",
+    renderer: [
+      {
+        label: "ANGLE (NVIDIA Corporation, NVIDIA GeForce GTX 1660/PCIe/SSE2, OpenGL 4.6.0 NVIDIA 470.129.06)",
+        value: "ANGLE (NVIDIA Corporation, NVIDIA GeForce GTX 1660/PCIe/SSE2, OpenGL 4.6.0 NVIDIA 470.129.06)",
+      },
+      {
+        label: "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060/PCIe/SSE2, OpenGL 4.6.0 NVIDIA 525.60.11)",
+        value: "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060/PCIe/SSE2, OpenGL 4.6.0 NVIDIA 525.60.11)",
+      },
+    ],
+  },
+  {
+    label: "Google Inc. (AMD)",
+    value: "Google Inc. (AMD)",
+    renderer: [
+      {
+        label: "ANGLE (AMD, Mesa AMD Radeon RX 570 (POLARIS10, DRM 3.42.0, 5.15.0-generic, LLVM 12.0.1), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+        value: "ANGLE (AMD, Mesa AMD Radeon RX 570 (POLARIS10, DRM 3.42.0, 5.15.0-generic, LLVM 12.0.1), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+      },
+      {
+        label: "ANGLE (AMD, Mesa AMD Radeon Vega 8 (RAVEN, DRM 3.42.0, 5.15.0-generic, LLVM 12.0.1), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+        value: "ANGLE (AMD, Mesa AMD Radeon Vega 8 (RAVEN, DRM 3.42.0, 5.15.0-generic, LLVM 12.0.1), OpenGL 4.6 (Compatibility Profile) Mesa 21.2.6)",
+      },
+    ],
+  },
+]
+
+export const webglVendors: Record<TPlatform, IWebGLVendor[]> = {
+  win: winVendors,
+  mac: macVendors,
+  linux: linuxVendors,
+}

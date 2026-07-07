@@ -5,9 +5,10 @@ import fs from 'fs-extra';
 import path from 'path';
 
 const profileStorage = path.join(path.resolve(), 'profiles')
-const executablePath = "C:/Users/Admin/.gologin/browser/orbita-browser-134/chrome.exe"
+const version = '146'
+const executablePath = `C:/Users/Admin/.gologin/browser/orbita-browser-${version}/chrome.exe`
 
-const proxyStr = '127.0.0.1:22338'
+const proxyStr = '103.179.189.46:14545:kp20:kp20'
 const [host, port, username, password] = proxyStr.split(':');
 
 const startProfile = async () => {

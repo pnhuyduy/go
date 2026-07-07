@@ -4,8 +4,11 @@ export type Nullable<T> = T | null
 
 type TMode = "noise" | "off"
 
+export type TPlatform = "win" | "mac" | "linux"
+
 export interface IOptions {
   version: number
+  platform: TPlatform
   doNotTrack: boolean
   dns: string
   screen: Nullable<string>

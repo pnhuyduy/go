@@ -6,12 +6,13 @@ import { randomFloat, randomItem, randomUID, randomWebGL } from "./utils"
 import { randomInt } from "crypto"
 import { defaultPreferences, gologinConfig } from "./template"
 import type { IOptions, IProfile, ISpawnArgs } from "./types"
-import { deviceMemory, generateUserAgent, hwConcurrency, screens } from "./resources"
+import { deviceMemory, generateUserAgent, hwConcurrency, platformNavigatorPlatform, screens } from "./resources"
 
 const clone = rfdc()
 
-const defaultOptions: IOptions = {
+export const defaultOptions: IOptions = {
   version: 134,
+  platform: "win",
   doNotTrack: true,
   dns: "",
   screen: null,
@@ -102,17 +103,17 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   const maskWebGLMetadata = options.webGLMetadata.mode === "mask"
   const { vendor, renderer } = options.webGLMetadata
 
-  const webGl = randomWebGL()
+  const webGl = randomWebGL(options.platform)
   newGologinConfig.webGl = webGl
   newGologinConfig.webGl.mode = maskWebGLMetadata
-  newGologinConfig.webGl.vendor = vendor
-  newGologinConfig.webGl.renderer = renderer
+  if (vendor) newGologinConfig.webGl.vendor = vendor
+  if (renderer) newGologinConfig.webGl.renderer = renderer
 
   // webglmetadata
   newGologinConfig.webgl.metadata = webGl
   newGologinConfig.webgl.metadata.mode = maskWebGLMetadata
-  newGologinConfig.webgl.metadata.vendor = vendor
-  newGologinConfig.webgl.metadata.renderer = renderer
+  if (vendor) newGologinConfig.webgl.metadata.vendor = vendor
+  if (renderer) newGologinConfig.webgl.metadata.renderer = renderer
 
   const webGlNoise = parseFloat(randomFloat(1, 99).toFixed(3))
   newGologinConfig.webglNoiseValue = newGologinConfig.webgl_noise_value =
@@ -143,6 +144,14 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   // WebRTC
   newGologinConfig.webrtc.mode = options.webrtc.mode
 
+  // language
+  if (options.language.value) {
+    const primary = options.language.value
+    const base = primary.split("-")[0]
+    newGologinConfig.languages = `${primary},${base},en-US,en`
+    newGologinConfig.langHeader = `${primary};q=0.9,${base};q=0.8,en-US;q=0.7,en;q=0.6`
+  }
+
   // Location
   newGologinConfig.geoLocation.mode = options.location.mode
 
@@ -153,8 +162,8 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   newGologinConfig.mediaDevices.videoInputs = randomInt(0, 3)
 
 
-  newGologinConfig.userAgent = generateUserAgent(options.version)
-  newGologinConfig.navigator.platform = "Win32"
+  newGologinConfig.userAgent = generateUserAgent(options.version, options.platform)
+  newGologinConfig.navigator.platform = platformNavigatorPlatform[options.platform]
 
 
   const prefs = {
@@ -165,11 +174,21 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   return prefs
 }
 
+// Chromium's --webrtc-ip-handling-policy values, as observed in a real GoLogin-launched
+// Orbita 149 command line (which used "default_public_interface_only" for the "alerted" mode).
+const webrtcIpHandlingPolicy: Record<IOptions["webrtc"]["mode"], string> = {
+  real: "default",
+  alerted: "default_public_interface_only",
+  disabled: "disable_non_proxied_udp",
+}
+
 export const spawnArgs = (
   options: ISpawnArgs,
   payload: IProfile,
+  fingerprint: Partial<IOptions> = {},
   args: string[] = []
 ) => {
+  const { webrtc, fonts, language } = defu(fingerprint, defaultOptions)
   let params: string[] = []
   const { userDataDir, remoteDebuggingPort } = options
   const { proxy, proxyInfo } = payload
@@ -185,9 +204,11 @@ export const spawnArgs = (
   params = [
     `--user-data-dir=${userDataDir}`,
     ...(remoteDebuggingPort ? [`--remote-debugging-port=${remoteDebuggingPort}`] : []),
-    "--lang=en",
-    "--font-masking-mode=2",
+    `--lang=${language.value || "en-US"}`,
+    `--font-masking-mode=${fonts.mode === "off" ? 0 : 1}`,
+    `--webrtc-ip-handling-policy=${webrtcIpHandlingPolicy[webrtc.mode]}`,
     "--password-store=basic",
+    "--disable-encryption",
     ...params,
     ...args
   ]
