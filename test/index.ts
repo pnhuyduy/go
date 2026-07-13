@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { checkProxy, getNewFingerprint, spawnArgs, writePrefs } from '../src/index';
+import { checkProxy, getNewFingerprint, randomInt, spawnArgs, writePrefs } from '../src/index';
 import { IProfile } from '../src/types';
 import fs from 'fs-extra';
 import path from 'path';
@@ -27,7 +27,7 @@ const startProfile = async () => {
 
   const fingerprint = getNewFingerprint(profile);
 
-  const userDataDir = path.join(profileStorage, 'test')
+  const userDataDir = path.join(profileStorage, randomInt(0, 999999).toString())
 
   await fs.ensureDir(path.join(userDataDir))
 
@@ -41,5 +41,5 @@ const startProfile = async () => {
 }
 
 (async () => {
-  await Promise.all(Array.from({ length: 1 }, (_, index) => index).map(() => startProfile()))
+  await Promise.all(Array.from({ length: 2 }, (_, index) => index).map(() => startProfile()))
 })()

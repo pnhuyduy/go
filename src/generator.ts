@@ -6,12 +6,13 @@ import { randomFloat, randomItem, randomUID, randomWebGL } from "./utils"
 import { randomInt } from "crypto"
 import { defaultPreferences, gologinConfig } from "./template"
 import type { IOptions, IProfile, ISpawnArgs } from "./types"
-import { deviceMemory, generateUserAgent, hwConcurrency, platformNavigatorPlatform, screens } from "./resources"
+import { deviceMemory, generateUserAgent, hwConcurrency, maxTouchPoints, platformNavigatorPlatform, platformVersion, screens } from "./resources"
+import { webGpuArchitectures, webGpuVendorFamily } from "./webgl"
 
 const clone = rfdc()
 
 export const defaultOptions: IOptions = {
-  version: 134,
+  version: 146,
   platform: "win",
   doNotTrack: true,
   dns: "",
@@ -69,9 +70,12 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
 
   // Proxy
   if (payload.proxy.protocol) {
-    const { username, password } = payload.proxy
+    const { protocol, host, port, username, password } = payload.proxy
     newGologinConfig.proxy.username = username
     newGologinConfig.proxy.password = password
+    newGologinConfig.proxy.mode = "fixed_servers"
+    newGologinConfig.proxy.schema = protocol
+    newGologinConfig.proxy.server = `${host}:${port}`
     // Timezone
     if (payload.proxyInfo) {
       newGologinConfig.timezone.id = payload.proxyInfo.timezone
@@ -115,6 +119,17 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   if (vendor) newGologinConfig.webgl.metadata.vendor = vendor
   if (renderer) newGologinConfig.webgl.metadata.renderer = renderer
 
+  // is_m1 (Apple Silicon) only applies to mac profiles whose picked GPU is an Apple Mx chip
+  newGologinConfig.is_m1 = options.platform === "mac" && /Apple M\d/.test(newGologinConfig.webGl.renderer)
+
+  // webGPU adapter info follows the same GPU vendor family as the WebGL pick, so the two
+  // fingerprints stay consistent with each other
+  const webGpuFamily = webGpuVendorFamily(newGologinConfig.webGl.vendor)
+  newGologinConfig.webGpu.supportedAdapters.highPerformance.info.vendor = webGpuFamily
+  newGologinConfig.webGpu.supportedAdapters.highPerformance.info.architecture = randomItem(
+    webGpuArchitectures[webGpuFamily]
+  )
+
   const webGlNoise = parseFloat(randomFloat(1, 99).toFixed(3))
   newGologinConfig.webglNoiseValue = newGologinConfig.webgl_noise_value =
     webGlNoise
@@ -140,9 +155,18 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
   const [width, height] = options.screen ? options.screen.split('x') : randomItem(screens).split("x")
   newGologinConfig.screenWidth = parseInt(width, 10)
   newGologinConfig.screenHeight = parseInt(height, 10)
+  newGologinConfig.mobile.width = newGologinConfig.screenWidth
+  newGologinConfig.mobile.height = newGologinConfig.screenHeight
 
   // WebRTC
   newGologinConfig.webrtc.mode = options.webrtc.mode
+  newGologinConfig.webrtc.should_fill_empty_ice_list = options.webrtc.fillBasedOnIP
+  newGologinConfig.webRTC = {
+    ...newGologinConfig.webRTC,
+    mode: options.webrtc.mode,
+    fillBasedOnIp: options.webrtc.fillBasedOnIP,
+    isEmptyIceList: options.webrtc.fillBasedOnIP,
+  }
 
   // language
   if (options.language.value) {
@@ -164,11 +188,23 @@ export const getNewFingerprint = (payload: IProfile, opts: Partial<IOptions> = d
 
   newGologinConfig.userAgent = generateUserAgent(options.version, options.platform)
   newGologinConfig.navigator.platform = platformNavigatorPlatform[options.platform]
+  newGologinConfig.navigator.max_touch_points = randomItem(maxTouchPoints)
+  newGologinConfig.platform_version = platformVersion[options.platform]
 
 
   const prefs = {
     ...clone(defaultPreferences),
     gologin: newGologinConfig,
+  }
+
+  // Chrome's own top-level proxy pref, mirroring what the --proxy-server CLI flag sets up,
+  // observed in a real GoLogin-launched Preferences file alongside the gologin.proxy block
+  if (payload.proxy.protocol) {
+    const { protocol, host, port, username, password } = payload.proxy
+    prefs.proxy = {
+      mode: "fixed_servers",
+      server: `${protocol}://${username}:${password}@${host}:${port}`,
+    }
   }
 
   return prefs

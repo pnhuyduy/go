@@ -616,3 +616,23 @@ export const webglVendors: Record<TPlatform, IWebGLVendor[]> = {
   mac: macVendors,
   linux: linuxVendors,
 }
+
+// Derives the WebGPU adapter vendor/architecture tag from the picked WebGL vendor string
+// (e.g. "Google Inc. (Intel)" -> "intel"), so the WebGPU and WebGL fingerprints stay
+// consistent with each other. Architecture codenames beyond the verified "gen-12lp" Intel
+// anchor point are plausible inferences, not independently confirmed against real captures.
+export const webGpuArchitectures: Record<string, string[]> = {
+  intel: ["gen-9", "gen-9.5", "gen-11", "gen-12lp"],
+  nvidia: ["turing", "ampere", "ada-lovelace"],
+  amd: ["rdna2", "rdna3"],
+  apple: ["common-3"],
+  unknown: [""],
+}
+
+export const webGpuVendorFamily = (webglVendor: string): string => {
+  if (/Apple/i.test(webglVendor)) return "apple"
+  if (/NVIDIA/i.test(webglVendor)) return "nvidia"
+  if (/Intel/i.test(webglVendor)) return "intel"
+  if (/AMD/i.test(webglVendor)) return "amd"
+  return "unknown"
+}
